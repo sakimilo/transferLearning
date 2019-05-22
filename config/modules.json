@@ -1,14 +1,16 @@
 [
     {
-        "moduleName" : "module1",
-        "path"       : "modules/module1/module1.py",
-        "execute"    : true,
+        "moduleName" : "modules.data.getData",
+        "path"       : "modules/data/getData.py",
+        "execute"    : false,
         "description": "",
         "owner"      : ""
-    }, {
-        "moduleName" : "celeryCheck",
-        "path"       : "modules/celeryCheck/celeryCheck.py",
-        "execute"    : false,
+    },
+
+    {
+        "moduleName" : "modules.model.getPretrained",
+        "path"       : "modules/model/getPretrained.py",
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }
