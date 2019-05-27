@@ -9,6 +9,7 @@ import jsonref
 import numpy as np
 import pickle
 
+import PIL
 import matplotlib.pyplot as plt
 
 config      = jsonref.load(open('../config/config.json'))
@@ -58,15 +59,26 @@ def showOneImg(logger, imageIndex):
         test_images   = dataDict['test_images']
         test_labels   = dataDict['test_labels']
 
+        visualiseArray( train_images[imageIndex] )
+
+    except Exception as e:
+
+        logger.error('Unable to show one image \n{}'.format(str(e)))
+
+@lD.log(logBase + '.visualiseArray')
+def visualiseArray(logger, img):
+
+    try:
+
         plt.figure()
-        plt.imshow(train_images[imageIndex])
+        plt.imshow( img )
         plt.colorbar()
         plt.grid(False)
         plt.show()
 
     except Exception as e:
 
-        logger.error('Unable to show one image \n{}'.format(str(e)))
+        logger.error('Unable to visualise image array \n{}'.format(str(e)))
 
 @lD.log(logBase + '.showMultipleImgs')
 def showMultipleImgs(logger, N):
@@ -82,23 +94,45 @@ def showMultipleImgs(logger, N):
         class_names   = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 
                          'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
-        sqrtN         = np.ceil(np.sqrt(N))
+        stackedImg    = np.stack([ train_images[i] for i in range(N) ], axis=-1)
+        labels        = [ class_names[train_labels[i]] for i in range(N) ]
 
-        plt.figure(figsize=(10,10))
+        visualiseStackedArray( stackedImg, labels )
+
+    except Exception as e:
+
+        logger.error('Unable to show one image \n{}'.format(str(e)))
+
+@lD.log(logBase + '.visualiseStackedArray')
+def visualiseStackedArray(logger, stackedImg, xlabels=None, cmap=plt.cm.binary):
+
+    try:
+
+        N         = stackedImg.shape[-1]
+        sqrtN     = np.ceil(np.sqrt(N))
+
+        if sqrtN > 10:
+            rowN, colN = np.ceil( N / 10 ), 10
+        else:
+            rowN, colN = sqrtN, sqrtN
+
+        plt.figure(figsize=(10, rowN))
         for i in range(N):
-            plt.subplot(sqrtN, sqrtN, i+1)
+            plt.subplot(rowN, colN, i+1)
             plt.xticks([])
             plt.yticks([])
             plt.grid(False)
-            plt.imshow(train_images[i], cmap=plt.cm.binary)
-            plt.xlabel(class_names[train_labels[i]])
+            plt.imshow( stackedImg[:, :, i], cmap=cmap )
+
+            if xlabels is not None:
+                plt.xlabel( xlabels[i] )
         
         plt.tight_layout()
         plt.show()
 
     except Exception as e:
 
-        logger.error('Unable to show one image \n{}'.format(str(e)))
+        logger.error('Unable to visualise stacked array \n{}'.format(str(e)))
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
