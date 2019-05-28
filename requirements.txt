@@ -116,9 +116,6 @@ Sphinx==1.7.6
 sphinx-rtd-theme==0.4.0
 sphinxcontrib-websupport==1.1.0
 statsmodels==0.9.0
-TA-Lib==0.4.17
-tensorboard==1.12.0
-tensorflow==1.12.0
 termcolor==1.1.0
 terminado==0.8.1
 testpath==0.4.2
