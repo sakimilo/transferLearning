@@ -2,7 +2,7 @@
     {
         "moduleName" : "modules.data.getData",
         "path"       : "modules/data/getData.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     },
@@ -10,7 +10,7 @@
     {
         "moduleName" : "modules.model.getPretrained",
         "path"       : "modules/model/getPretrained.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }

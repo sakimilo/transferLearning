@@ -8,6 +8,7 @@ from logs import logDecorator as lD
 import jsonref
 import numpy as np
 import pickle
+from tqdm import tqdm
 
 import PIL
 import matplotlib.pyplot as plt
@@ -15,6 +16,35 @@ import matplotlib.pyplot as plt
 config      = jsonref.load(open('../config/config.json'))
 logBase     = config['logging']['logBase'] + '.modules.data.getData'
 dataFolder  = '../data/raw_data/'
+
+@lD.log(logBase + '.getInputDataDict')
+def getInputDataDict(logger, resize_shape=(56, 56, 3)):
+
+    try:
+
+        shape2D       = resize_shape[:2]
+        channelSize   = resize_shape[-1]
+
+        dataDict      = mnistFashion()
+        inputDataDict = {}
+
+        for dataName in ['train_images', 'test_images']:
+            tmpArr      = []
+            imageStack  = dataDict[ dataName ]
+            for img in tqdm(imageStack):
+                img         = img / 255.0
+                img_resized = PIL.Image.fromarray(img).resize(size=shape2D)
+                img_resized = np.array(img_resized)
+                tmpArr.append( img_resized )
+            tmpArr      = np.stack( tmpArr )
+            tmpArr      = np.stack([ tmpArr ] * channelSize, axis=-1)
+            inputDataDict[dataName] = tmpArr
+
+        return inputDataDict
+
+    except Exception as e:
+
+        logger.error('Unable to generate train data \n{}'.format(str(e)))
 
 @lD.log(logBase + '.mnistFashion')
 def mnistFashion(logger):
@@ -139,9 +169,14 @@ def main(logger, resultsDict):
 
     try:
 
-        dataDict = mnistFashion()
+        print('getting numpy MNIST data dictionary')
+        dataDict      = mnistFashion()
+        print('keys', dataDict.keys())
 
-        print(dataDict)
+        print('getting stacked & resized MNIST data array with channels')
+        inputDataDict = getInputDataDict( resize_shape=(56, 56, 3) )
+        print( inputDataDict['train_images'].shape, inputDataDict['train_images'].max(), inputDataDict['train_images'].min() )
+        print( inputDataDict['test_images'].shape, inputDataDict['test_images'].max(), inputDataDict['test_images'].min() )
 
     except Exception as e:
 
