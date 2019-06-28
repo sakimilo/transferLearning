@@ -8,6 +8,7 @@ import jsonref
 import numpy as np
 import pickle
 import warnings
+from tqdm import tqdm
 
 from modules.data import getData
 
@@ -108,17 +109,14 @@ def visualise_graph(logger, modelName, subfolder=None):
         logger.error('Unable to write graph into tensorboard\n{}'.format(str(e)))
 
 @lD.log(logBase + '.visualise_layers')
-def visualise_layers(logger, model, listOfTensorNodes, inputData):
+def visualise_layers(logger, sess, listOfTensorNodes, inputData):
 
     try:
-
-
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            outputResults = sess.run( listOfTensorNodes,
-                                      feed_dict={
-                                                    'input_1:0' : inputData
-                                                })
+        outputResults = sess.run( listOfTensorNodes,
+                                  feed_dict={
+                                                'input_1:0' : inputData
+                                            })
+        
         for res, tf_node in zip(outputResults, listOfTensorNodes):
             print('-'*50)
             print('node: {}; shape: {}'.format(tf_node, res[0].shape))

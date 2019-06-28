@@ -26,3 +26,5 @@ src/logs/*.log
 results/*
 data/*
 models/*
+notebooks/model_checkpoints/*
+notebooks/tensorlog/*
