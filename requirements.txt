@@ -91,7 +91,7 @@ py==1.5.4
 pycodestyle==2.4.0
 pydicom==1.2.2
 pyflakes==2.0.0
-Pygments==2.2.0
+Pygments==2.7.4
 pylint==2.2.2
 pyparsing==2.2.0
 pytest==3.6.3
